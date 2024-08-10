@@ -1,4 +1,6 @@
-package dev.tori.shadow.option;
+package dev.tori.shadow.util;
+
+import dev.tori.shadow.option.Option;
 
 import java.util.HashMap;
 

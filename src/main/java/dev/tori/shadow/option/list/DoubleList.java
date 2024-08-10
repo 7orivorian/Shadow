@@ -9,14 +9,14 @@ import java.util.List;
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
-public class FloatList extends ListOption<Float> {
+public class DoubleList extends ListOption<Double> {
 
-    public FloatList(String key, List<Float> value) {
+    public DoubleList(String key, List<Double> value) {
         super(key, value);
     }
 
     @Override
-    public Float deserializeElement(JsonElement jsonElement) {
-        return jsonElement.getAsFloat();
+    public Double deserializeElement(JsonElement jsonElement) {
+        return jsonElement.getAsDouble();
     }
 }

@@ -1,4 +1,7 @@
-package dev.tori.shadow;
+package dev.tori.shadow.option;
+
+import com.google.gson.JsonElement;
+import org.jetbrains.annotations.Contract;
 
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
@@ -6,27 +9,51 @@ package dev.tori.shadow;
  */
 public abstract class Option<T> {
 
-    private final T initial;
-    private T value;
+    protected final String key;
+    protected final T initial;
+    protected T value;
 
-    public Option(T value) {
-        this.initial = value;
-        this.value = initial;
+    @Contract(pure = true)
+    public Option(String key, T value) {
+        this(key, value, value);
+    }
+
+    @Contract(pure = true)
+    public Option(String key, T value, T initial) {
+        this.key = key;
+        this.value = value;
+        this.initial = initial;
+    }
+
+    public abstract JsonElement serialize();
+
+    public abstract void deserialize(JsonElement jsonElement);
+
+    public boolean isValid(T value) {
+        return true;
+    }
+
+    public String key() {
+        return this.key;
     }
 
     public T value() {
-        return value;
+        return this.value;
     }
 
-    public void value(T value) {
-        this.value = value;
+    public boolean setValue(T value) {
+        if (this.isValid(value)) {
+            this.value = value;
+            return true;
+        }
+        return false;
     }
 
     public T initial() {
-        return initial;
+        return this.initial;
     }
 
     public void reset() {
-        value = initial;
+        this.value = this.initial;
     }
 }

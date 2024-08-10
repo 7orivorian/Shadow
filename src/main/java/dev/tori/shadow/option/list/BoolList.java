@@ -1,6 +1,7 @@
-package dev.tori.shadow.option;
+package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonElement;
+import dev.tori.shadow.option.ListOption;
 
 import java.util.List;
 

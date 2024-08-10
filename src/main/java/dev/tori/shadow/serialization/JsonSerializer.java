@@ -1,8 +1,8 @@
-package dev.tori.shadow;
+package dev.tori.shadow.serialization;
 
 import com.google.gson.*;
+import dev.tori.shadow.config.Config;
 import dev.tori.shadow.option.Option;
-import dev.tori.shadow.option.OptionGroup;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;

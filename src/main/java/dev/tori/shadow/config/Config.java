@@ -1,4 +1,4 @@
-package dev.tori.shadow;
+package dev.tori.shadow.config;
 
 import dev.tori.shadow.option.Option;
 import org.jetbrains.annotations.Contract;
