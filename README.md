@@ -2,7 +2,7 @@
 
 ![GitHub all releases](https://img.shields.io/github/downloads/7orivorian/Shadow/total?style=flat-square)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/7orivorian/Shadow?style=flat-square)
-[![](https://jitci.com/gh/7orivorian/Wraith/svg)](https://jitci.com/gh/7orivorian/Shadow)
+[![](https://jitci.com/gh/7orivorian/Shadow/svg)](https://jitci.com/gh/7orivorian/Shadow)
 
 Json config library.
 

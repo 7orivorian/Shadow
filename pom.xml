@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <name>Wraith</name>
+    <name>Shadow</name>
     <description>Json config library</description>
     <url>https://github.com/7orivorian/Shadow</url>
 
