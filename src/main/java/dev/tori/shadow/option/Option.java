@@ -2,6 +2,7 @@ package dev.tori.shadow.option;
 
 import com.google.gson.JsonElement;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
@@ -10,7 +11,9 @@ import org.jetbrains.annotations.Contract;
 public abstract class Option<T> {
 
     protected final String key;
+    @Nullable
     protected final T initial;
+    @Nullable
     protected T value;
 
     @Contract(pure = true)
@@ -19,7 +22,7 @@ public abstract class Option<T> {
     }
 
     @Contract(pure = true)
-    public Option(String key, T value, T initial) {
+    public Option(String key, @Nullable T value, @Nullable T initial) {
         this.key = key;
         this.value = value;
         this.initial = initial;
@@ -29,7 +32,7 @@ public abstract class Option<T> {
 
     public abstract void deserialize(JsonElement jsonElement);
 
-    public boolean isValid(T value) {
+    public boolean isValid(@Nullable T value) {
         return true;
     }
 
@@ -37,11 +40,12 @@ public abstract class Option<T> {
         return this.key;
     }
 
+    @Nullable
     public T value() {
         return this.value;
     }
 
-    public boolean setValue(T value) {
+    public boolean setValue(@Nullable T value) {
         if (this.isValid(value)) {
             this.value = value;
             return true;
@@ -49,11 +53,21 @@ public abstract class Option<T> {
         return false;
     }
 
+    @Nullable
     public T initial() {
         return this.initial;
     }
 
     public void reset() {
         this.value = this.initial;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+               "key='" + key + '\'' +
+               //", initial=" + initial +
+               ", value=" + value +
+               '}';
     }
 }

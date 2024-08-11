@@ -1,7 +1,10 @@
-package dev.tori.shadow.option;
+package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import dev.tori.shadow.option.Option;
+import dev.tori.shadow.serialization.DeserializableElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +13,17 @@ import java.util.List;
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
-public abstract class ListOption<E> extends Option<List<E>> {
+public abstract class AbstractListOption<E> extends Option<List<E>> implements DeserializableElement<E> {
 
-    public ListOption(String key, List<E> value) {
+    public AbstractListOption(String key, List<E> value) {
         super(key, value, new ArrayList<>(value));
     }
 
-    public abstract E deserializeElement(JsonElement jsonElement);
-
     @Override
     public JsonElement serialize() {
+        if (value == null) {
+            return JsonNull.INSTANCE;
+        }
         JsonArray jsonArray = new JsonArray();
         value.forEach(element -> {
             if (element instanceof Boolean e) {
@@ -30,8 +34,6 @@ public abstract class ListOption<E> extends Option<List<E>> {
                 jsonArray.add(e);
             } else if (element instanceof String e) {
                 jsonArray.add(e);
-            } else if (element instanceof OptionGroup e) {
-                jsonArray.add(e.serialize());
             }
         });
         return jsonArray;

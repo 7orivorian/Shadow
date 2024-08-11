@@ -15,14 +15,18 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
-public class JsonSerializer {
+public class ConfigSerializer {
 
     public static void write(@NotNull Config config, @NotNull File file) {
         write(serialize(config), file);
     }
 
     public static void write(@NotNull JsonObject json, @NotNull File file) {
-        Gson gson = new GsonBuilder().setLenient().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .setLenient()
+                .setPrettyPrinting()
+                .create();
         write(json, file, gson);
     }
 
@@ -40,14 +44,35 @@ public class JsonSerializer {
         }
     }
 
-    public static Config readToConfig(@NotNull File file, @NotNull Config config) throws FileNotFoundException {
+    public static JsonObject serialize(@NotNull Config config) {
+        JsonObject json = new JsonObject();
+        config.forEachOption(option -> {
+            JsonElement serialized = option.serialize();
+            if (serialized.isJsonNull()) {
+                System.out.println("Serialized " + option.key() + " is JsonNull (" + serialized + ")");
+            }
+            json.add(option.key(), serialized);
+            System.out.println(option);
+        });
+        return json;
+    }
+
+    public static void readToConfig(@NotNull File file, @NotNull Config config) throws FileNotFoundException {
         JsonObject json = read(file);
         config.forEachOption(option -> {
             if (json.has(option.key())) {
-                option.deserialize(json.getAsJsonPrimitive(option.key()));
+                JsonElement element = json.get(option.key());
+                if (element.isJsonArray()) {
+                    option.deserialize(element.getAsJsonArray());
+                } else if (element.isJsonObject()) {
+                    option.deserialize(element.getAsJsonObject());
+                } else if (element.isJsonPrimitive()) {
+                    option.deserialize(element.getAsJsonPrimitive());
+                } else if (element.isJsonNull()) {
+                    option.deserialize(element.getAsJsonNull());
+                }
             }
         });
-        return config;
     }
 
     public static JsonObject read(@NotNull File file) throws FileNotFoundException {
@@ -55,12 +80,6 @@ public class JsonSerializer {
             throw new FileNotFoundException();
         }
         return JsonParser.parseReader(new FileReader(file)).getAsJsonObject();
-    }
-
-    public static JsonObject serialize(@NotNull Config config) {
-        JsonObject json = new JsonObject();
-        config.forEachOption(option -> json.add(option.key(), option.serialize()));
-        return json;
     }
 
     public static Config createConfig(JsonObject json) {

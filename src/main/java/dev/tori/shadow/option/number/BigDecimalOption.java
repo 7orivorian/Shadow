@@ -1,16 +1,19 @@
-package dev.tori.shadow.option;
+package dev.tori.shadow.option.number;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import dev.tori.shadow.option.Option;
+
+import java.math.BigDecimal;
 
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
-public class BoolOption extends Option<Boolean> {
+public class BigDecimalOption extends Option<BigDecimal> {
 
-    public BoolOption(String key, Boolean value) {
+    public BigDecimalOption(String key, BigDecimal value) {
         super(key, value);
     }
 
@@ -24,11 +27,11 @@ public class BoolOption extends Option<Boolean> {
 
     @Override
     public void deserialize(JsonElement jsonElement) {
-        setValue(jsonElement.getAsBoolean());
+        setValue(jsonElement.getAsBigDecimal());
     }
 
     @Override
-    public boolean isValid(Boolean value) {
+    public boolean isValid(BigDecimal value) {
         return value != null;
     }
 }

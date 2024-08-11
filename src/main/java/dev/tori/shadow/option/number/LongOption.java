@@ -1,16 +1,17 @@
-package dev.tori.shadow.option;
+package dev.tori.shadow.option.number;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import dev.tori.shadow.option.Option;
 
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
-public class BoolOption extends Option<Boolean> {
+public class LongOption extends Option<Long> {
 
-    public BoolOption(String key, Boolean value) {
+    public LongOption(String key, Long value) {
         super(key, value);
     }
 
@@ -24,11 +25,11 @@ public class BoolOption extends Option<Boolean> {
 
     @Override
     public void deserialize(JsonElement jsonElement) {
-        setValue(jsonElement.getAsBoolean());
+        setValue(jsonElement.getAsLong());
     }
 
     @Override
-    public boolean isValid(Boolean value) {
+    public boolean isValid(Long value) {
         return value != null;
     }
 }
