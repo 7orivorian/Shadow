@@ -29,7 +29,7 @@ Add Shadow as a dependency.
 <dependency>
     <groupId>com.github.7orivorian</groupId>
     <artifactId>Shadow</artifactId>
-    <version>1.0.0</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
@@ -49,14 +49,14 @@ Add Shadow as a dependency.
 
 ```gradle
 dependencies {
-    implementation 'com.github.7orivorian:Shadow:1.0.0'
+    implementation 'com.github.7orivorian:Shadow:0.1.0'
 }
 ```
 
 ### Other
 
 Download a `.jar` file
-from [releases](https://github.com/7orivorian/Shadow/releases/tag/1.0.0).
+from [releases](https://github.com/7orivorian/Shadow/releases/tag/0.1.0).
 
 # Building
 
