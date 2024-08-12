@@ -25,14 +25,16 @@ package dev.tori.shadow.config;
 import com.google.gson.JsonElement;
 import dev.tori.shadow.option.BoolOption;
 import dev.tori.shadow.option.Option;
+import dev.tori.shadow.option.OptionGroup;
 import dev.tori.shadow.option.StringOption;
 import dev.tori.shadow.option.list.*;
-import dev.tori.shadow.option.number.FloatOption;
+import dev.tori.shadow.option.number.*;
 import dev.tori.shadow.serialization.DeserializableElement;
 import dev.tori.shadow.util.OptionHashMap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -55,6 +57,133 @@ public class Config {
 
     public Option<?> get(@NotNull String key) {
         return options().get(key);
+    }
+
+    public boolean getBool(@NotNull String key) {
+        if (options.get(key) instanceof BoolOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a BoolOption");
+    }
+
+    public String getString(@NotNull String key) {
+        if (options.get(key) instanceof StringOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a StringOption");
+    }
+
+    /* Numbers */
+
+    public int getInt(@NotNull String key) {
+        if (options.get(key) instanceof IntOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a IntOption");
+    }
+
+    public long getLong(@NotNull String key) {
+        if (options.get(key) instanceof LongOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a LongOption");
+    }
+
+    public float getFloat(@NotNull String key) {
+        if (options.get(key) instanceof FloatOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a FloatOption");
+    }
+
+    public double getDouble(@NotNull String key) {
+        if (options.get(key) instanceof DoubleOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a DoubleOption");
+    }
+
+    public Number getNumber(@NotNull String key) {
+        if (options.get(key) instanceof NumberOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a NumberOption");
+    }
+
+    public BigDecimal getBigDecimal(@NotNull String key) {
+        if (options.get(key) instanceof BigDecimalOption o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a BigDecimalOption");
+    }
+
+    /* List options */
+
+    public List<Boolean> getBoolList(@NotNull String key) {
+        if (options.get(key) instanceof BoolList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a BoolList");
+    }
+
+    public List<String> getStringList(@NotNull String key) {
+        if (options.get(key) instanceof StringList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a StringList");
+    }
+
+    public List<Integer> getIntList(@NotNull String key) {
+        if (options.get(key) instanceof IntList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a IntList");
+    }
+
+    public List<Long> getLongList(@NotNull String key) {
+        if (options.get(key) instanceof LongList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a LongList");
+    }
+
+    public List<Float> getFloatList(@NotNull String key) {
+        if (options.get(key) instanceof FloatList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a FloatList");
+    }
+
+    public List<Double> getDoubleList(@NotNull String key) {
+        if (options.get(key) instanceof DoubleList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a DoubleList");
+    }
+
+    /* Options with children */
+
+    public OptionHashMap getOptionsInGroup(@NotNull String key) {
+        if (options.get(key) instanceof OptionGroup o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a OptionGroup");
+    }
+
+    public OptionHashMap getOptionInList(@NotNull String key) {
+        if (options.get(key) instanceof OptionList o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a OptionList");
+    }
+
+    public OptionHashMap getOptionIn(@NotNull String key) {
+        if (options.get(key) instanceof OptionList o) {
+            return o.value();
+        } else if (options.get(key) instanceof OptionGroup o) {
+            return o.value();
+        }
+        throw new IllegalArgumentException("key " + key + " is not a OptionList or OptionGroup");
     }
 
     public void forEachOption(BiConsumer<? super String, ? super Option<?>> action) {
