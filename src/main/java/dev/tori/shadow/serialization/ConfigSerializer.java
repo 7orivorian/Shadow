@@ -68,20 +68,19 @@ public class ConfigSerializer {
 
     public static JsonObject serialize(@NotNull Config config) {
         JsonObject json = new JsonObject();
-        config.forEachOption(option -> {
+        config.forEachOption((key, option) -> {
             JsonElement serialized = option.serialize();
             if (serialized.isJsonNull()) {
                 System.out.println("Serialized " + option.key() + " is JsonNull (" + serialized + ")");
             }
             json.add(option.key(), serialized);
-            System.out.println(option);
         });
         return json;
     }
 
     public static void readToConfig(@NotNull File file, @NotNull Config config) throws FileNotFoundException {
         JsonObject json = read(file);
-        config.forEachOption(option -> {
+        config.forEachOption((key, option) -> {
             if (json.has(option.key())) {
                 JsonElement element = json.get(option.key());
                 if (element.isJsonArray()) {
