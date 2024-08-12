@@ -23,6 +23,7 @@
 package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonElement;
+import dev.tori.shadow.option.Option;
 
 import java.util.List;
 
@@ -34,6 +35,10 @@ public class DoubleList extends AbstractListOption<Double> {
 
     public DoubleList(String key, List<Double> value) {
         super(key, value);
+    }
+
+    public DoubleList(String key, List<Double> value, boolean fixed) {
+        super(key, value, fixed);
     }
 
     @Override

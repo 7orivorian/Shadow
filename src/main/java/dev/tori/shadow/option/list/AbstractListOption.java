@@ -27,6 +27,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import dev.tori.shadow.option.Option;
 import dev.tori.shadow.serialization.DeserializableElement;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,12 @@ import java.util.List;
  */
 public abstract class AbstractListOption<E> extends Option<List<E>> implements DeserializableElement<E> {
 
-    public AbstractListOption(String key, List<E> value) {
+    public AbstractListOption(String key, @NotNull List<E> value) {
         super(key, value, new ArrayList<>(value));
+    }
+
+    public AbstractListOption(String key, @NotNull List<E> value, boolean fixed) {
+        super(key, value, new ArrayList<>(value), fixed);
     }
 
     @Override
@@ -79,7 +84,9 @@ public abstract class AbstractListOption<E> extends Option<List<E>> implements D
     @Override
     public void reset() {
         this.value.clear();
-        this.value.addAll(initial);
+        if (initial != null) {
+            this.value.addAll(initial);
+        }
     }
 
     public void add(E element) {

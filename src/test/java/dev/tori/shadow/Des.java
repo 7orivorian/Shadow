@@ -1,7 +1,6 @@
 package dev.tori.shadow;
 
 import dev.tori.shadow.config.Config;
-import dev.tori.shadow.option.OptionGroup;
 import dev.tori.shadow.serialization.ConfigSerializer;
 import dev.tori.shadow.util.OptionHashMap;
 import dev.tori.shadow.util.PrettyPrinter;
@@ -35,17 +34,12 @@ public class Des {
             addOption("entrypoint", "");
             addOption("mappings", "");
             addOption("handler_folder", (String) null);
-            addStringList("plugins", new ArrayList<>());
+            addStringList("plugins", new ArrayList<>(), false);
             addOption("verbose", false);
             addOption("mixins", false);
             addOption("log_output", "");
             addOption("version", "");
-            addOption("dependencies", new OptionHashMap() {{
-                put(new OptionGroup("group", new OptionHashMap() {{
-                    put("url", "");
-                    put("file", "");
-                }}));
-            }});
+            addOption("dependencies", new OptionHashMap(), false);
         }
     }
 }

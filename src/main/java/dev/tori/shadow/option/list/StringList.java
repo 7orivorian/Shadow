@@ -23,6 +23,7 @@
 package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonElement;
+import dev.tori.shadow.option.Option;
 
 import java.util.List;
 
@@ -34,6 +35,10 @@ public class StringList extends AbstractListOption<String> {
 
     public StringList(String key, List<String> value) {
         super(key, value);
+    }
+
+    public StringList(String key, List<String> value, boolean fixed) {
+        super(key, value, fixed);
     }
 
     @Override

@@ -23,6 +23,7 @@
 package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonElement;
+import dev.tori.shadow.option.Option;
 
 import java.util.List;
 
@@ -34,6 +35,10 @@ public class BoolList extends AbstractListOption<Boolean> {
 
     public BoolList(String key, List<Boolean> value) {
         super(key, value);
+    }
+
+    public BoolList(String key, List<Boolean> value, boolean fixed) {
+        super(key, value, fixed);
     }
 
     @Override

@@ -23,7 +23,9 @@
 package dev.tori.shadow.util;
 
 import com.google.gson.JsonElement;
-import dev.tori.shadow.option.*;
+import dev.tori.shadow.option.BoolOption;
+import dev.tori.shadow.option.Option;
+import dev.tori.shadow.option.StringOption;
 import dev.tori.shadow.option.list.*;
 import dev.tori.shadow.option.number.*;
 import dev.tori.shadow.serialization.DeserializableElement;
@@ -39,6 +41,9 @@ import java.util.List;
 public class OptionHashMap extends HashMap<String, Option<?>> {
 
     public void put(Option<?> option) {
+        if (option == null) {
+            return;
+        }
         super.put(option.key(), option);
     }
 
@@ -74,24 +79,53 @@ public class OptionHashMap extends HashMap<String, Option<?>> {
         put(new BigDecimalOption(key, value));
     }
 
+    public void put(final String key, final OptionHashMap value) {
+        put(key, value, true);
+    }
+
+    public void put(final String key, final OptionHashMap value, final boolean fixed) {
+        put(new OptionList(key, value, fixed));
+    }
+
     public void putBoolList(final String key, final List<Boolean> value) {
         put(new BoolList(key, value));
+    }
+
+    public void putBoolList(final String key, final List<Boolean> value, final boolean fixed) {
+        put(new BoolList(key, value, fixed));
     }
 
     public void putDoubleList(final String key, final List<Double> value) {
         put(new DoubleList(key, value));
     }
 
+    public void putDoubleList(final String key, final List<Double> value, final boolean fixed) {
+        put(new DoubleList(key, value, fixed));
+    }
+
     public void putFloatList(final String key, final List<Float> value) {
         put(new FloatList(key, value));
+    }
+
+    public void putFloatList(final String key, final List<Float> value, final boolean fixed) {
+        put(new FloatList(key, value, fixed));
     }
 
     public void putStringList(final String key, final List<String> value) {
         put(new StringList(key, value));
     }
 
+
+    public void putStringList(final String key, final List<String> value, final boolean fixed) {
+        put(new StringList(key, value, fixed));
+    }
+
     public <E> void putList(final String key, final List<E> value, final DeserializableElement<E> deserializableElement) {
-        put(new AbstractListOption<E>(key, value) {
+        putList(key, value, true, deserializableElement);
+    }
+
+    public <E> void putList(final String key, final List<E> value, final boolean fixed, final DeserializableElement<E> deserializableElement) {
+        put(new AbstractListOption<>(key, value, fixed) {
             @Override
             public E deserializeElement(JsonElement jsonElement) {
                 return deserializableElement.deserializeElement(jsonElement);

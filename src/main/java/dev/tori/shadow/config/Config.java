@@ -23,17 +23,18 @@
 package dev.tori.shadow.config;
 
 import com.google.gson.JsonElement;
-import dev.tori.shadow.option.*;
+import dev.tori.shadow.option.BoolOption;
+import dev.tori.shadow.option.Option;
+import dev.tori.shadow.option.StringOption;
 import dev.tori.shadow.option.list.*;
 import dev.tori.shadow.option.number.FloatOption;
 import dev.tori.shadow.serialization.DeserializableElement;
 import dev.tori.shadow.util.OptionHashMap;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
@@ -41,19 +42,23 @@ import java.util.function.Consumer;
  */
 public class Config {
 
-    private final ArrayList<Option<?>> options;
+    private final OptionHashMap options;
 
     @Contract(pure = true)
     public Config() {
-        this.options = new ArrayList<>();
+        this.options = new OptionHashMap();
     }
 
-    public ArrayList<Option<?>> options() {
+    public OptionHashMap options() {
         return this.options;
     }
 
-    public void forEachOption(final Consumer<Option<?>> consumer) {
-        this.options.forEach(consumer);
+    public Option<?> get(@NotNull String key) {
+        return options().get(key);
+    }
+
+    public void forEachOption(BiConsumer<? super String, ? super Option<?>> action) {
+        this.options.forEach(action);
     }
 
     public void clear() {
@@ -85,7 +90,11 @@ public class Config {
     }
 
     public void addStringList(final String key, final List<String> value) {
-        addOption(new StringList(key, value));
+        addStringList(key, value, true);
+    }
+
+    public void addStringList(final String key, final List<String> value, final boolean fixed) {
+        addOption(new StringList(key, value, fixed));
     }
 
     public <E> void addOption(final String key, final List<E> value, final DeserializableElement<E> deserializableElement) {
@@ -101,12 +110,18 @@ public class Config {
         addOption(new OptionList(key, value));
     }
 
+    public void addOption(final String key, final OptionHashMap value, final boolean fixed) {
+        addOption(new OptionList(key, value, fixed));
+    }
+
     public void addOption(final Option<?> option) {
-        this.options.add(option);
+        this.options.put(option);
     }
 
     public void addOptions(final Option<?>... options) {
-        this.options.addAll(Arrays.asList(options));
+        for (Option<?> option : options) {
+            addOption(option);
+        }
     }
 
     @Override

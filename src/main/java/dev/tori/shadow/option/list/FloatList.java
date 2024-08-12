@@ -23,6 +23,7 @@
 package dev.tori.shadow.option.list;
 
 import com.google.gson.JsonElement;
+import dev.tori.shadow.option.Option;
 
 import java.util.List;
 
@@ -34,6 +35,10 @@ public class FloatList extends AbstractListOption<Float> {
 
     public FloatList(String key, List<Float> value) {
         super(key, value);
+    }
+
+    public FloatList(String key, List<Float> value, boolean fixed) {
+        super(key, value, fixed);
     }
 
     @Override

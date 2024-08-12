@@ -22,10 +22,66 @@
 
 package dev.tori.shadow.util;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.internal.LazilyParsedNumber;
+import dev.tori.shadow.option.OptionGroup;
+
+import java.math.BigDecimal;
+
 /**
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
 public class ParseUtil {
 
+    public static OptionGroup parseOptionGroupFromJsonElement(JsonElement jsonElement) {
+        if (jsonElement.isJsonObject()) {
+            OptionHashMap map = new OptionHashMap();
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+            for (String key : jsonObject.keySet()) {
+                JsonElement element = jsonObject.get(key);
+                if (element.isJsonPrimitive()) {
+                    JsonPrimitive primitive = element.getAsJsonPrimitive();
+                    if (primitive.isBoolean()) {
+                        map.put(key, primitive.getAsBoolean());
+                    } else if (primitive.isString()) {
+                        map.put(key, primitive.getAsString());
+                    } else if (primitive.isNumber()) {
+                        Number number = primitive.getAsNumber();
+                        if (number instanceof LazilyParsedNumber lazy) {
+                            String string = lazy.toString();
+                            try {
+                                int i = Integer.parseInt(string);
+                                map.put(key, i);
+                            } catch (NumberFormatException e0) {
+                                try {
+                                    long l = Long.parseLong(string);
+                                    map.put(key, l);
+                                } catch (NumberFormatException e1) {
+                                    try {
+                                        float f = Float.parseFloat(string);
+                                        map.put(key, f);
+                                    } catch (NumberFormatException e2) {
+                                        try {
+                                            double d = Double.parseDouble(string);
+                                            map.put(key, d);
+                                        } catch (NumberFormatException e3) {
+                                            map.put(key, new BigDecimal(string));
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            throw new NumberFormatException();
+                        }
+                    }
+                }
+            }
+            return new OptionGroup("", map);
+        }
+        throw new IllegalArgumentException();
+    }
 }

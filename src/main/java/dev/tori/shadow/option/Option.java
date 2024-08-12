@@ -33,9 +33,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Option<T> {
 
     protected final String key;
-    @Nullable
     protected final T initial;
-    @Nullable
+    protected final boolean fixed;
     protected T value;
 
     @Contract(pure = true)
@@ -44,10 +43,21 @@ public abstract class Option<T> {
     }
 
     @Contract(pure = true)
+    public Option(String key, T value, boolean fixed) {
+        this(key, value, value, fixed);
+    }
+
+    @Contract(pure = true)
     public Option(String key, @Nullable T value, @Nullable T initial) {
+        this(key, value, initial, true);
+    }
+
+    @Contract(pure = true)
+    public Option(String key, @Nullable T value, @Nullable T initial, boolean fixed) {
         this.key = key;
         this.value = value;
         this.initial = initial;
+        this.fixed = fixed;
     }
 
     public abstract JsonElement serialize();
@@ -62,7 +72,6 @@ public abstract class Option<T> {
         return this.key;
     }
 
-    @Nullable
     public T value() {
         return this.value;
     }
