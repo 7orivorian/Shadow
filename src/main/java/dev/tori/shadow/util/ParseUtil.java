@@ -27,6 +27,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.LazilyParsedNumber;
 import dev.tori.shadow.option.OptionGroup;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.math.BigDecimal;
 
@@ -34,6 +35,7 @@ import java.math.BigDecimal;
  * @author <a href="https://github.com/7orivorian">7orivorian</a>
  * @since 1.0.0
  */
+@ApiStatus.Internal
 public class ParseUtil {
 
     public static OptionGroup parseOptionGroupFromJsonElement(JsonElement jsonElement) {
