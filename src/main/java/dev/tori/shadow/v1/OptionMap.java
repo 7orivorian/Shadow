@@ -71,4 +71,11 @@ public class OptionMap {
     public boolean isEmpty() {
         return map.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return "OptionMap{" +
+               "map=" + map +
+               '}';
+    }
 }
