@@ -65,6 +65,14 @@ public class JsonConfig {
         return options.values();
     }
 
+    public Option<?> get(@NotNull String key) {
+        return options.get(key);
+    }
+
+    public boolean contains(@NotNull Option<?> option) {
+        return options.containsKey(option.key());
+    }
+
     public void add(@NotNull Option<?> option) {
         options.put(option.key(), option);
     }

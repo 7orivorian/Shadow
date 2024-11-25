@@ -22,7 +22,10 @@
 
 package dev.tori.shadow.v1;
 
+import com.google.gson.JsonNull;
+
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +37,14 @@ public class Options {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static Option<Optional<?>> of(String key, Optional<?> value) {
+        return new Option<>(key, value);
+    }
+
+    public static Option<JsonNull> ofNull(String key) {
+        return new Option<>(key, null);
+    }
+
+    public static Option<JsonNull> of(String key, JsonNull value) {
         return new Option<>(key, value);
     }
 
@@ -69,7 +80,11 @@ public class Options {
         return new Option<>(key, value);
     }
 
-    public static Option<List<Option<?>>> of(String key, List<Option<?>> value) {
+    public static Option<OptionMap> of(String key, Collection<Option<?>> value) {
+        return new Option<>(key, OptionMap.of(value));
+    }
+
+    public static Option<OptionMap> of(String key, OptionMap value) {
         return new Option<>(key, value);
     }
 }

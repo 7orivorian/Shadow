@@ -50,46 +50,51 @@ public class JsonSerializer {
     }
 
     @NotNull
-    public static JsonObject serialize(@NotNull Option<Collection<Option<?>>> option) {
-        return serialize(option.value());
-    }
-
-    @NotNull
-    @SuppressWarnings("unchecked")
     public static JsonObject serialize(@NotNull Collection<Option<?>> options) {
         JsonObject json = new JsonObject();
 
         for (Option<?> option : options) {
-            if (option.value() instanceof Boolean) {
-                json.addProperty(option.key(), (Boolean) option.value());
-            } else if (option.value() instanceof String) {
-                json.addProperty(option.key(), (String) option.value());
-            } else if (option.value() instanceof Integer) {
-                json.addProperty(option.key(), (Integer) option.value());
-            } else if (option.value() instanceof Float) {
-                json.addProperty(option.key(), (Float) option.value());
-            } else if (option.value() instanceof List<?> list) {
-                JsonElement listJson;
-                if (!list.isEmpty()) {
-                    Object o = list.get(0);
-                    if (o instanceof Option) {
-                        listJson = serialize((List<Option<?>>) option.value());
-                    } else if (o instanceof String) {
-                        listJson = serializeCollection((List<String>) option.value());
-                    } else if (o instanceof Boolean) {
-                        listJson = serializeCollection((List<Boolean>) option.value());
-                    } else if (o instanceof Number) {
-                        listJson = serializeCollection((List<Number>) option.value());
-                    } else {
-                        throw new IllegalArgumentException("Unsupported list content type");
-                    }
-                    json.add(option.key(), listJson);
-                }
-            } else {
-                throw new IllegalArgumentException("Unsupported type: " + option.value().getClass().getName());
-            }
+            json.add(option.key(), serialize(option));
         }
         return json;
+    }
+
+    @SuppressWarnings("unchecked")
+    @NotNull
+    public static JsonElement serialize(@NotNull Option<?> option) {
+        JsonElement element;
+        if (option.value() instanceof Boolean) {
+            element = new JsonPrimitive((Boolean) option.value());
+        } else if (option.value() instanceof String) {
+            element = new JsonPrimitive((String) option.value());
+        } else if (option.value() instanceof Integer) {
+            element = new JsonPrimitive((Integer) option.value());
+        } else if (option.value() instanceof Float) {
+            element = new JsonPrimitive((Float) option.value());
+        } else if (option.value() instanceof OptionMap map) {
+            element = new JsonObject();
+            map.values().forEach(o -> ((JsonObject) element).add(o.key(), serialize(o)));
+        } else if (option.value() instanceof List<?> list) {
+            if (!list.isEmpty()) {
+                Object o = list.get(0);
+                if (o instanceof Option) {
+                    element = serializeCollection((List<Option<?>>) option.value());
+                } else if (o instanceof String) {
+                    element = serializeCollection((List<String>) option.value());
+                } else if (o instanceof Boolean) {
+                    element = serializeCollection((List<Boolean>) option.value());
+                } else if (o instanceof Number) {
+                    element = serializeCollection((List<Number>) option.value());
+                } else {
+                    throw new IllegalArgumentException("Unsupported list content type");
+                }
+            } else {
+                element = new JsonArray();
+            }
+        } else {
+            throw new IllegalArgumentException("Unsupported type: " + option.value().getClass().getName());
+        }
+        return element;
     }
 
     @NotNull
@@ -116,6 +121,8 @@ public class JsonSerializer {
                 jsonArray.add((JsonObject) item);
             } else if (item instanceof JsonSerializable<?> js) {
                 jsonArray.add(js.serialize());
+            } else if (item instanceof Option<?> option) {
+                jsonArray.add(serialize(option));
             } else {
                 throw new IllegalArgumentException("Unsupported type: " + item.getClass().getName());
             }
@@ -181,40 +188,40 @@ public class JsonSerializer {
     }
 
     @NotNull
-    public static List<Option<?>> deserializeObject(@NotNull JsonObject json) {
-        List<Option<?>> list = new ArrayList<>();
+    public static OptionMap deserializeObject(@NotNull JsonObject json) {
+        OptionMap map = new OptionMap();
         json.asMap().forEach((k, v) -> {
             if (v.isJsonObject()) {
-                list.add(Options.of(k, deserializeObject(v.getAsJsonObject())));
+                map.put(Options.of(k, deserializeObject(v.getAsJsonObject())));
             } else if (v.isJsonArray()) {
-                list.add(Options.array(k, deserializeArray(v.getAsJsonArray())));
+                map.put(Options.array(k, deserializeArray(v.getAsJsonArray())));
             } else if (v.isJsonPrimitive()) {
                 JsonPrimitive p = v.getAsJsonPrimitive();
                 if (p.isBoolean()) {
-                    list.add(Options.of(k, p.getAsBoolean()));
+                    map.put(Options.of(k, p.getAsBoolean()));
                 } else if (p.isString()) {
-                    list.add(Options.of(k, p.getAsString()));
+                    map.put(Options.of(k, p.getAsString()));
                 } else if (p.isNumber()) {
                     Number number = p.getAsNumber();
                     if (number instanceof LazilyParsedNumber lazy) {
                         String string = lazy.toString();
                         try {
                             int i = Integer.parseInt(string);
-                            list.add(Options.of(k, i));
+                            map.put(Options.of(k, i));
                         } catch (NumberFormatException e0) {
                             try {
                                 long l = Long.parseLong(string);
-                                list.add(Options.of(k, l));
+                                map.put(Options.of(k, l));
                             } catch (NumberFormatException e1) {
                                 try {
                                     float f = Float.parseFloat(string);
-                                    list.add(Options.of(k, f));
+                                    map.put(Options.of(k, f));
                                 } catch (NumberFormatException e2) {
                                     try {
                                         double d = Double.parseDouble(string);
-                                        list.add(Options.of(k, d));
+                                        map.put(Options.of(k, d));
                                     } catch (NumberFormatException e3) {
-                                        list.add(Options.of(k, new BigDecimal(string)));
+                                        map.put(Options.of(k, new BigDecimal(string)));
                                     }
                                 }
                             }
@@ -225,7 +232,7 @@ public class JsonSerializer {
                 }
             }
         });
-        return list;
+        return map;
     }
 
     @NotNull
